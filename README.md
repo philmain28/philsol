@@ -1,6 +1,6 @@
 # philsol
 Fed up with relying on expensive proprietary for your waveguide research?  philsol might just be the software for you. 
-philsol is a fully vectorial finite difference waveguide mode solver implimented in python.
+philsol is a fully vectorial finite difference waveguide mode solver which throws elegence and sophistication out of the window and replaces it with brute force. 
 This is a direct implimentaion of the algorithm found in the paper: 
 'Full-vectorial finite-difference analysis of microstructured optical fibres' Zhu and Brown. 
 
