@@ -12,6 +12,5 @@ This is a direct python implimentaion of the algorithm found in the paper:
 
 ## To do 
 - Solve for other fields 
-- Cpu optimise (sparse matrix storage etc)
 - Add option of pyCuda solvers 
 - More boundry condition options
