@@ -12,29 +12,23 @@ Zhaoming Zhu and Thomous G Brown
 
 
 import numpy as np
-import numpy.linalg as la
+#import numpy.linalg as la
 import scipy.constants as cst
 import scipy.sparse.linalg as crunch
-import matplotlib.pyplot as plt
-
-def big_mul(mats):        
-    # multiplies a big stack of matrices
-    a,b = np.shape(mats[0])
-    product = np.eye(a)
-    for mat in mats:
-        product = np.matmul(product, mat)
-    
-    return product
+import scipy.sparse as sps
+import time as tempus
         
 
-def eigen_build(k0, n, dx, dy):
+def eigen_build(k0, n, dx, dy):    
     # lets find out size of grid and construc some finite difference operators    
     nx, ny, dummy = np.shape(n)
-    Ux = (-np.eye(nx*ny, k= 0) + np.eye(nx*ny, k=1)) / dx #(- np.eye(nx*ny, k=-1) + np.eye(nx*ny, k=1)) / (2*dx) 
-    Uy = (-np.eye(nx*ny, k= 0) + np.eye(nx*ny, k=nx)) / dy #(- np.eye(nx*ny,k=-nx) + np.eye(nx*ny, k=nx)) / (2.*dy)
-    Vx = - np.transpose(Ux)
-    Vy = - np.transpose(Uy)
-    I =  np.eye(nx*ny)    
+    print('Assembling matrix for {} grid points...'.format(nx*ny))
+    
+    Ux = (-sps.eye(nx*ny, k= 0) + np.eye(nx*ny, k=1)) / dx  
+    Uy = (-sps.eye(nx*ny, k= 0) + np.eye(nx*ny, k=nx)) / dy 
+    Vx = - Ux.transpose()
+    Vy = - Uy.transpose()
+    I =  sps.eye(nx*ny)    
 
     
     # We can build relitice permitivity tensors each point is averaged with its 
@@ -44,75 +38,51 @@ def eigen_build(k0, n, dx, dy):
     epszi = np.zeros((nx*ny, nx*ny)) 
     count = 0 
     for j in range(0,ny):
-        for i in range(0, nx):
-            if j == 0 and i == 0:               
-                epsx[count, count] = n[i, j, 0]**2   
-                epsy[count, count] = n[i, j, 1]**2
-                epszi[count, count] = 1. / n[i, j, 2]**2
-
-            elif j == 0 and i != 0:
-                epsx[count, count] = n[i, j, 0]**2    
-                epsy[count, count] = (n[i, j, 1]**2 + n[i-1, j, 1]**2) / 2.
-                epszi[count, count] = 2. / ( n[i, j, 2]**2 + n[i-1 , j, 2]**2 )
-                
-            elif j != 0 and i== 0:
-                epsx[count, count] = (n[i, j, 0]**2 + n[i, j - 1, 0]**2) / 2.   
-                epsy[count, count] = n[i, j, 1]**2
-                epszi[count, count] = 2. / ( n[i, j, 2]**2 + n[i, j-1, 2]**2 )
-                
-            else:
-                epsx[count, count] = (n[i, j, 0]**2 + n[i, j - 1, 0]**2) / 2.   
-                epsy[count, count] = (n[i, j, 1]**2 + n[i-1, j, 1]**2) / 2.
-                epszi[count, count] = 4. / ( n[i, j, 2]**2 + n[i-1 , j-1, 2]**2 
-                                        +  n[i, j-1, 2]**2 + n[i-1 , j, 2]**2 )
-
+        for i in range(0, nx):            
+            epsx[count, count] = n[i, j, 0]**2   
+            epsy[count, count] = n[i, j, 1]**2
+            epszi[count, count] = 1. / n[i, j, 2]**2
             count = count + 1 
+            
+            
+    epsx =  sps.coo_matrix(epsx)
+    epsy =  sps.coo_matrix(epsy)   
+    epszi = sps.coo_matrix(epszi)
+    
 
     # Now we need to construct the full operator matrices
-    Pxx = (- big_mul([Ux, epszi, Vy, Vx, Uy]) / k0**2 
-           + big_mul( [k0**2 * I + big_mul([Ux, epszi, Vx]),              
-                                     epsx + big_mul([Vy, Uy]) / k0**2 ])  )
-    #Pxx = k0**2 * epsx + np.matmul(Vy, Vy) 
-    #Pxy = - np.matmul(Vy, Vx)
-    #Pyy = k0**2 * epsx + np.matmul(Vy, Vy)
+    t = tempus.time()     
+    Pxx = (- Ux * epszi * Vy * Vx * Uy / k0**2 
+             + (k0**2 * I + Ux * epszi * Vx) * (epsx + Vy * Uy / k0**2)    )                   
     
+    Pyy = (- Uy * epszi * Vx * Vy * Ux / k0**2 
+             + (k0**2 * I + Uy * epszi * Vy) * (epsy + Vx * Ux / k0**2)    )
+             
+    Pxy = (  Ux * epszi * Vy * (epsy + Vx * Ux / k0**2)
+              -  (k0**2 * I + Ux * epszi * Vx) * Vy * Ux / k0**2   )
+          
+    Pyx = (  Uy * epszi * Vx * (epsy + Vy * Uy / k0**2 ) 
+             - (k0**2 * I + Uy * epszi * Vy) * Vx * Uy / k0**2 )  
     
+    print('and we are done (after {} secs).'.format(tempus.time() - t))     
+          
+    #print(sps.dia_matrix(Pxx).get_shape())         
+    #print(sps.dia_matrix(Pxy).get_shape())
     
-    #plt.pcolor(Pxx) 
-    #plt.show()
-    Pyy = (- big_mul([Uy, epszi , Vx, Vy, Ux]) / k0**2 
-           + big_mul( [k0**2 * I + big_mul([Uy, epszi, Vy]),              
-                                     epsy + big_mul([Vx, Ux]) / k0**2 ])  )
-    #plt.pcolor(Pyy)
-    #plt.show()
-    Pxy = ( big_mul(
-            [ big_mul([Ux, epszi, Vy]), epsy + big_mul([Vx, Ux]) / k0**2])
-            - big_mul( 
-               [ k0**2 * I + big_mul([Ux, epszi, Vx]), big_mul([Vy, Ux]) ]
-                                                                   ) / k0**2 )
-    #plt.pcolor(Pxy)
-    #plt.show()                                                               
-    Pyx = ( big_mul(
-            [ big_mul([Uy, epszi, Vx]), epsy + big_mul([Vy, Uy]) / k0**2])
-            - big_mul( 
-               [ k0**2 * I + big_mul([Uy, epszi, Vy]), big_mul([Vx, Uy]) ]
-                                                                   ) / k0**2 )    
-    #plt.pcolor(Pyx)
-    #plt.show()                 
-        
-    # Ok we should be able to do the final assembly now !!!
-    P = np.concatenate(
-           (  np.concatenate((Pxx, Pxy), axis = 1)
-              ,  np.concatenate((Pyx, Pyy), axis = 1)) , axis = 0 )
-    #plt.figure()
-    #plt.pcolor(P)    
+    P = sps.vstack( 
+           [ sps.hstack([sps.coo_matrix(Pxx), sps.coo_matrix(Pxy)]) , 
+                     sps.hstack([sps.coo_matrix(Pyx), sps.coo_matrix(Pyy)])]
+                  ) 
+   # Ok we should be able to do the final assembly now !!!
+    #P = 
+    #sps.vstack( [ sps.hstack([Pxx, Pxy], format = "dia"), sps.hstack([Pxx, Pxy], format = "dia") ], format = "dia" )    
     
     return P 
 
 def SolveE(P, beta_trial):
     # Solves eigenproblem
     
-    beta, E = crunch.eigs(P, 1, sigma = beta_trial**2)
+    beta, E = crunch.eigsh(P, 1, sigma = beta_trial**2)
     
     Ex, Ey = np.split(E, 2) 
     
