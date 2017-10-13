@@ -8,20 +8,22 @@ square silica waveguide.
 
 """
 
-
-import philsol
+import philsol as ps
+import numpy as np
+import scipy.constants as cst
+import matplotlib.pyplot as plt
 
 
 # first we need to build a refractive index profile
 points = 60
 n = np.ones((points, points, 3))
-n[19:39, 19:39, :] = 1.45
+n[19:39, 19:39, :] = 1.22
 
 
 # Now we do some scaling so the waveguide guides light at telecom frequecies. 
 lam = 1.55E-6
 k = 2 * cst.pi / lam 
-neff = 1.25
+neff = 1.04
 beta_in = 2*cst.pi * neff / lam
 
 # we want structure to be scale of wavelength 
@@ -33,15 +35,16 @@ y = np.array(range(points)) * dy
 
 
 # plot the index profile 
-plt.pcolor(x*1.E6,y*1.E6,n[:,:,1])
+plt.pcolor(x*1.E6,y*1.E6, n[:,:,1])
 
 #%%
 
 # Assemble finite difference matrices 
-P = eigen_build(k, n, dx, dy)
 
-# Now we solve
-beta, Ex, Ey = SolveE(P, beta_in) 
+P = ps.eigen_build(k, n, dx, dy)
+
+#%% Now we solve
+beta, Ex, Ey = ps.SolveE(P, beta_in) 
 Ex = np.reshape(Ex, (points, points))    
 Ey = np.reshape(Ey, (points, points))
 
