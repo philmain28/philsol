@@ -19,35 +19,34 @@ import scipy.sparse as sps
 import time as tempus
         
 
-def eigen_build(k0, n, dx, dy):    
+def eigen_build(k0, n, dx, dy, operators):    
     # lets find out size of grid and construc some finite difference operators    
     nx, ny, dummy = np.shape(n)
-    print('Assembling matrix for {} grid points...'.format(nx*ny))
+    print('Assembling matrix for {} grid points...\n'.format(nx*ny))
     
-    Ux = (-sps.eye(nx*ny, k= 0) + np.eye(nx*ny, k=1)) / dx  
-    Uy = (-sps.eye(nx*ny, k= 0) + np.eye(nx*ny, k=nx)) / dy 
+    Ux = (-sps.eye(nx*ny, k= 0) + sps.eye(nx*ny, k=1)) / dx  
+    Uy = (-sps.eye(nx*ny, k= 0) + sps.eye(nx*ny, k=nx)) / dy 
     Vx = - Ux.transpose()
     Vy = - Uy.transpose()
     I =  sps.eye(nx*ny)    
 
     
-    # We can build relitice permitivity tensors each point is averaged with its 
-    # neighbours.
-    epsx = np.zeros((nx*ny, nx*ny))
-    epsy = np.zeros((nx*ny, nx*ny))    
-    epszi = np.zeros((nx*ny, nx*ny)) 
+    # We then build relitive permitivity tensors  
+    epsx = np.empty(nx*ny)
+    epsy = np.empty(nx*ny)    
+    epszi = np.empty(nx*ny) 
     count = 0 
     for j in range(0,ny):
         for i in range(0, nx):            
-            epsx[count, count] = n[i, j, 0]**2   
-            epsy[count, count] = n[i, j, 1]**2
-            epszi[count, count] = 1. / n[i, j, 2]**2
+            epsx[count] = n[i, j, 0]**2   
+            epsy[count] = n[i, j, 1]**2
+            epszi[count] = 1. / n[i, j, 2]**2
             count = count + 1 
             
             
-    epsx =  sps.coo_matrix(epsx)
-    epsy =  sps.coo_matrix(epsy)   
-    epszi = sps.coo_matrix(epszi)
+    epsx =  sps.spdiags(epsx, 0, nx*ny,nx*ny)
+    epsy =  sps.spdiags(epsy,0, nx*ny,nx*ny)   
+    epszi = sps.spdiags(epszi,0, nx*ny,nx*ny)
     
 
     # Now we need to construct the full operator matrices
@@ -66,27 +65,28 @@ def eigen_build(k0, n, dx, dy):
     
     print('and we are done (after {} secs).'.format(tempus.time() - t))     
           
-    #print(sps.dia_matrix(Pxx).get_shape())         
-    #print(sps.dia_matrix(Pxy).get_shape())
     
+    # Ok we should be able to do the final assembly now !!!
     P = sps.vstack( 
            [ sps.hstack([sps.coo_matrix(Pxx), sps.coo_matrix(Pxy)]) , 
                      sps.hstack([sps.coo_matrix(Pyx), sps.coo_matrix(Pyy)])]
                   ) 
-   # Ok we should be able to do the final assembly now !!!
-    #P = 
-    #sps.vstack( [ sps.hstack([Pxx, Pxy], format = "dia"), sps.hstack([Pxx, Pxy], format = "dia") ], format = "dia" )    
-    
-    return P 
 
-def SolveE(P, beta_trial):
-    # Solves eigenproblem
-    
-    beta, E = crunch.eigsh(P, 1, sigma = beta_trial**2)
-    
+    return P, {'epsx': epsx, 'epsy':epsy, 'epszi': epszi, 
+                   'ux': Ux, 'uy': Uy, 'vx': Vx, 'vy': Vy }
+
+
+
+def solve_Et(P, beta_trial, neigs):
+    # Solves eigenproblem and returns beta and the transverse E-feilds
+    print('Solving eigenmodes')
+    t = tempus.time() 
+    beta_squared, E = crunch.eigs(P, neigs, sigma = beta_trial**2)    
     Ex, Ey = np.split(E, 2) 
+    print('{} secs later we have the final solution.'.format(tempus.time() - t))    
     
-    return beta**0.5, Ex, Ey
-    
+    return beta_squared**0.5, Ex, Ey 
+
+   
     
       
