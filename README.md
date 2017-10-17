@@ -6,10 +6,10 @@ This is a direct python implimentaion of the algorithm found in the paper:
 
 ## (lack of) features
 - Solves vector Maxwell equations in 2D for arbitary refractive index profile. 
-- philsol can handle anisotropic refractive indixes with diagonal tensor.
+- philsol can handle anisotropic refractive indices with diagonal tensor.
 - Currently hard coded with conductive boundary.
 - see main.py for minimal example
-- takes bitmap image as input (For a tutorial on geometry building https://www.youtube.com/watch?v=QjRi0Mq3G2g)
+- Best way of importing geometry is with a bitmap image (For a tutorial on geometry building https://www.youtube.com/watch?v=QjRi0Mq3G2g)
 - see test1.py for example using SEM image
 
 ## To do 
