@@ -13,6 +13,6 @@ This is a direct python implimentaion of the algorithm found in the paper:
 - see test1.py for example using SEM image
 
 ## To do 
-- Solve for other fields 
+- Solve for z componant and H fields 
 - Add option of pyCuda solvers 
 - More boundry condition options
