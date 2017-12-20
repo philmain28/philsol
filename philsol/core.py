@@ -1,23 +1,6 @@
-"""
-Created on Wed Oct 11 09:36:36 2017
-
-@author: pbm24
-
-fd mode solver based on: 
-Full-vectorial finite-difference anaylysis of microstructured oprical fibres 
-Zhaoming Zhu and Thomous G Brown
-
-"""
-
-
-
 import numpy as np
-#import numpy.linalg as la
-import scipy.constants as cst
-import scipy.sparse.linalg as crunch
 import scipy.sparse as sps
 import time as tempus
-        
 
 def eigen_build(k0, n, dx, dy, operators):    
     # lets find out size of grid and construc some finite difference operators    
@@ -75,16 +58,3 @@ def eigen_build(k0, n, dx, dy, operators):
     return P, {'epsx': epsx, 'epsy':epsy, 'epszi': epszi, 
                    'ux': Ux, 'uy': Uy, 'vx': Vx, 'vy': Vy }
 
-
-
-def solve_Et(P, beta_trial, neigs):
-    # Solves eigenproblem and returns beta and the transverse E-feilds
-    print('Solving eigenmodes')
-    t = tempus.time()
-
-    beta_squared, E = crunch.eigs(P, neigs, sigma = beta_trial**2)
-
-    Ex, Ey = np.split(E, 2) 
-    print('{} secs later we have the final solution.'.format(tempus.time() - t))    
-    
-    return beta_squared**0.5, Ex, Ey 

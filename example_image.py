@@ -54,14 +54,14 @@ plt.show()
 #%%
 
 # Assemble finite difference matrices 
-P, _ = ps.core.eigen_build(k, n, dx, dy, False)
+P, _ = ps.eigen_build(k, n, dx, dy, False)
 
 #%% Now we solve
 neigs = 5
 neff = 0.99806
 beta_in = 2 * cst.pi * neff / lam
 
-beta, Ex, Ey = ps.core.solve_Et(P, beta_in, neigs)
+beta, Ex, Ey = ps.solve.solve_Et(P, beta_in, neigs)
 for bout in beta: 
     print(bout * lam / (2. * cst.pi) )
 
