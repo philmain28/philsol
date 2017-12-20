@@ -54,14 +54,14 @@ plt.show()
 #%%
 
 # Assemble finite difference matrices 
-P, _ = ps.eigen_build(k, n, dx, dy, False)
+P, _ = ps.core.eigen_build(k, n, dx, dy, False)
 
 #%% Now we solve
 neigs = 5
 neff = 0.99806
 beta_in = 2 * cst.pi * neff / lam
 
-beta, Ex, Ey = ps.solve_Et(P, beta_in, neigs) 
+beta, Ex, Ey = ps.core.solve_Et(P, beta_in, neigs)
 for bout in beta: 
     print(bout * lam / (2. * cst.pi) )
 
@@ -69,5 +69,5 @@ E_plot = np.reshape(Ex, (points, points, neigs))
 
 for i in range(neigs):
    s = str(beta[i]* lam / (2. * cst.pi) ) + '.png'
-   plt.pcolor(x*1.E6,y*1.E6,E_plot[:,:,i])
-   plt.savefig(s)
+   plt.pcolor(x*1.E6,y*1.E6, np.real(E_plot[:,:,i]))
+   plt.show()

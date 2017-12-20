@@ -80,13 +80,11 @@ def eigen_build(k0, n, dx, dy, operators):
 def solve_Et(P, beta_trial, neigs):
     # Solves eigenproblem and returns beta and the transverse E-feilds
     print('Solving eigenmodes')
-    t = tempus.time() 
-    beta_squared, E = crunch.eigs(P, neigs, sigma = beta_trial**2)    
+    t = tempus.time()
+
+    beta_squared, E = crunch.eigs(P, neigs, sigma = beta_trial**2)
+
     Ex, Ey = np.split(E, 2) 
     print('{} secs later we have the final solution.'.format(tempus.time() - t))    
     
     return beta_squared**0.5, Ex, Ey 
-
-   
-    
-      
