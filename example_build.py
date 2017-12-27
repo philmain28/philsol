@@ -41,14 +41,15 @@ plt.pcolor(x*1.E6,y*1.E6, n[:,:,1])
 
 # Assemble finite difference matrices 
 
-P = ps.eigen_build(k, n, dx, dy)
+P, _ = ps.eigen_build(k, n, dx, dy)
 
 #%% Now we solve
-beta, Ex, Ey = ps.SolveE(P, beta_in) 
+beta, Ex, Ey = ps.solve.solve_Et(P, beta_in)
 Ex = np.reshape(Ex, (points, points))    
 Ey = np.reshape(Ey, (points, points))
 
 print(beta * lam / (2.*cst.pi) )
 
 plt.figure()
-plt.pcolor(x*1.E6,y*1.E6,Ex)
+plt.pcolor(x*1.E6, y*1.E6, np.real(Ex))
+plt.show()
