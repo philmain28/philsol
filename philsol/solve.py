@@ -1,19 +1,19 @@
 #import numpy.linalg as la
 import scipy.constants as cst
-import scipy.sparse.linalg as crunch
-import time as tempus
+import scipy.sparse.linalg as linalg
+import time
 import numpy as np
 
 from philsol.cusolver_complex import csreigvsi
 
-def solve_Et(P, beta_trial, neigs=1):
+def solve_Et(P, beta_trial, E_trial=None, neigs=1):
     # Solves eigenproblem and returns beta and the transverse E-feilds
     print('Solving eigenmodes on CPU')
-    t = tempus.time()
+    t = time.time()
 
-    beta_squared, E = crunch.eigs(P, neigs, sigma=beta_trial ** 2)
+    beta_squared, E = linalg.eigs(P, neigs, sigma=beta_trial ** 2)
 
     Ex, Ey = np.split(E, 2)
-    print('{} secs later we have the final solution.'.format(tempus.time() - t))
+    print('{} secs later we have the final solution.'.format(time.time() - t))
 
     return beta_squared ** 0.5, Ex, Ey

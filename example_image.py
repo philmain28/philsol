@@ -57,11 +57,10 @@ plt.show()
 P, _ = ps.eigen_build(k, n, dx, dy, operators=False)
 
 #%% Now we solve
-neigs = 1
 neff = 0.9980
 beta_in = 2 * cst.pi * neff / lam
 
-beta, Ex, Ey = ps.solve.solve_Et(P, beta_in, neigs)
+beta, Ex, Ey = ps.solve.solve_Et(P, beta_in, neigs = 10)
 for bout in beta: 
     print(bout * lam / (2. * cst.pi) )
 

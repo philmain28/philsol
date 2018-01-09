@@ -1,9 +1,9 @@
 import numpy as np
 import scipy.sparse as sps
-import time as tempus
+import time
 
 def eigen_build(k0, n, dx, dy, operators=False):
-    # lets find out size of grid and construc some finite difference operators    
+    # lets find out size of grid and construct some finite difference operators    
     nx, ny, dummy = np.shape(n)
     print('Assembling matrix for {} grid points...\n'.format(nx*ny))
     
@@ -14,7 +14,7 @@ def eigen_build(k0, n, dx, dy, operators=False):
     I =  sps.eye(nx*ny)    
 
     
-    # We then build relitive permitivity tensors  
+    # We then build relative permitivity tensors  
     epsx = np.empty(nx*ny)
     epsy = np.empty(nx*ny)    
     epszi = np.empty(nx*ny) 
@@ -33,7 +33,7 @@ def eigen_build(k0, n, dx, dy, operators=False):
     
 
     # Now we need to construct the full operator matrices
-    t = tempus.time()     
+    t = time.time()     
     Pxx = (- Ux * epszi * Vy * Vx * Uy / k0**2 
              + (k0**2 * I + Ux * epszi * Vx) * (epsx + Vy * Uy / k0**2)    )                   
     
