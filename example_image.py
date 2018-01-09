@@ -25,7 +25,7 @@ def bmp_to_array(file):
 points = 200
 
 #lets import an sem image
-index_array = bmp_to_array('block_guide.bmp')
+index_array = bmp_to_array('hollow_core3.bmp')
 
 print(np.max(index_array))
 print(np.min(index_array))
@@ -56,9 +56,9 @@ plt.show()
 # Assemble finite difference matrices 
 P, _ = ps.eigen_build(k, n, dx, dy, operators=False)
 
-#%% Now we solve on CPU
+#%% Now we solve
 neigs = 1
-neff = 0.99806
+neff = 0.9980
 beta_in = 2 * cst.pi * neff / lam
 
 beta, Ex, Ey = ps.solve.solve_Et(P, beta_in, neigs)
@@ -71,23 +71,3 @@ for i in range(neigs):
    s = str(beta[i]* lam / (2. * cst.pi) ) + '.png'
    plt.pcolor(x*1.E6,y*1.E6, np.real(E_plot[:,:,i]))
    plt.show()
-
-
-#%% and again on GPU
-"""
-VERY VERY BROKEN. NEEDS TO BE COMPLEX?
-"""
-neigs = 1
-neff = 1.2
-#beta_in = 2 * cst.pi * neff / lam
-beta_in = beta[0]
-
-beta, Ex, Ey = ps.solve.solve_Et_cuda(P, beta_in, neigs)
-
-print(beta * lam / (2. * cst.pi) )
-
-E_plot = np.reshape(Ex, (points, points))
-
-s = str(beta* lam / (2. * cst.pi) ) + '.png'
-plt.pcolor(x*1.E6,y*1.E6, E_plot)
-plt.show()
