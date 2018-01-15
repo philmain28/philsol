@@ -10,8 +10,8 @@ def read(fname):
 
 setup(
     name = "philsol",
-    version = "0.13",
-    author = "Phil Main",
+    version = "0.20",
+    author = "Phil Main, Joel Collins",
     author_email = "philmain28@gmail.com",
 	install_requires=['numpy', 'scipy'],
     description = ("A fully vectorial finite difference waveguide mode solver. Based on the algorithm of Zhu and Brown"),
