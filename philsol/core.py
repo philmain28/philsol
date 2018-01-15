@@ -46,7 +46,7 @@ def eigen_build(k0, n, dx, dy, operators=False):
     Pyx = (  Uy * epszi * Vx * (epsy + Vy * Uy / k0**2 ) 
              - (k0**2 * I + Uy * epszi * Vy) * Vx * Uy / k0**2 )  
     
-    print('and we are done (after {} secs).'.format(tempus.time() - t))     
+    print('and we are done (after {} secs).'.format(time.time() - t))     
           
     
     # Ok we should be able to do the final assembly now !!!
