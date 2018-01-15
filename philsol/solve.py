@@ -1,13 +1,12 @@
-#import numpy.linalg as la
 import scipy.constants as cst
 import scipy.sparse.linalg as linalg
 import time
 import numpy as np
 
-from philsol.cusolver_complex import csreigvsi
-
 def solve_Et(P, beta_trial, E_trial=None, neigs=1):
-    # Solves eigenproblem and returns beta and the transverse E-feilds
+    """
+	Solves eigenproblem and returns beta and the transverse E-feilds
+	"""
     print('Solving eigenmodes on CPU')
     t = time.time()
 
