@@ -1,6 +1,6 @@
 # philsol
 ## Modes for the Masses (Massless?)
-Fed up with relying on expensive proprietary for your waveguide research?  philsol might just be the package for you. 
+Fed up with relying on expensive proprietary for your electromagnetic waveguide research?  philsol might just be the package for you. 
 This is a fully vectorial finite difference waveguide mode solver. In a world where high performance hardware is cheaper than high end software, philsol throws elegence and sophistication out of the window and replaces it with brute force. 
 
 This is a direct Python implimentaion of the algorithm found in the paper: 
@@ -17,7 +17,8 @@ Warning: I haven't thoroughly tested so be wary and check the results are sensib
 
 ## Features
 ### Solver
-- Solves vector Maxwell equations in 2D for arbitary refractive index profile. 
+- Solves vector Maxwell(Helmholtz) equations in 2D for arbitary refractive index profile.
+- Return x and y componants of electric field.
 - philsol can handle anisotropic refractive indices with diagonal tensor.
 - Currently hard coded with conductive boundary.
 
