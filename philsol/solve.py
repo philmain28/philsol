@@ -13,6 +13,8 @@ def solve(P, beta_trial, E_trial=None, neigs=1):
     beta_squared, E = linalg.eigs(P, neigs, sigma=beta_trial ** 2)
 
     Ex, Ey = np.split(E, 2)
+    
+    Ex, Ey = np.transpose(Ex), np.transpose(Ey)
     print('{} secs later we have the final solution.'.format(time.time() - t))
 
     return beta_squared ** 0.5, Ex, Ey

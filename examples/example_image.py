@@ -66,7 +66,7 @@ plt.show()
 #%%
 
 # Assemble finite difference matrices, and discard the operators to _
-P, _ = ps.eigen_build(k, n, dx, dy, operators=False)
+P, _ = ps.eigen_build(k, n, dx, dy)
 
 #%% Now we solve
 
@@ -82,16 +82,22 @@ neigs = 10
 # Call philsol solver, to solve the constructed finite-difference matrices
 beta, Ex, Ey = ps.solve.solve(P, beta_in, neigs = neigs)
 
-# Print out the effective index for each calculated mode
-for bout in beta: 
-    print("Effective index: {}".format(bout * lam / (2. * cst.pi) ))
+#%% Now we process the solutions
 
-# Create plot data array for x-polarised light
-E_plot = np.reshape(Ex, (points, points, neigs))
+# Recover 2D field profiles from each vector solution
+Ex_fields = [np.reshape(E_vec, (points, points)) for E_vec in Ex]
 
 # For each eigenmode, create a real field plot for x-polarised light
-for i in range(neigs):
+for i, E in enumerate(Ex_fields):
    plt.figure()
-   s = str(beta[i]* lam / (2. * cst.pi) ) + '.png'
-   plt.pcolor(x*1.E6, y*1.E6, np.real(E_plot[:,:,i]))
+   
+   neff = beta[i]* lam / (2. * cst.pi) 
+
+   plt.pcolor(x*1.E6, y*1.E6, np.real(E))
+   
+   plt.title("Effective index: {}".format(neff))
+   plt.xlabel("x (microns)")
+   plt.ylabel("y (microns)")
+   
    plt.show()
+

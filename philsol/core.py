@@ -2,7 +2,7 @@ import numpy as np
 import scipy.sparse as sps
 import time
 
-def eigen_build(k0, n, dx, dy, operators=False):
+def eigen_build(k0, n, dx, dy):
     # lets find out size of grid and construct some finite difference operators    
     nx, ny, dummy = np.shape(n)
     print('Assembling matrix for {} grid points...\n'.format(nx*ny))

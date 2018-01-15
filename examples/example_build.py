@@ -45,11 +45,21 @@ P, _ = ps.eigen_build(k, n, dx, dy)
 
 #%% Now we solve
 beta, Ex, Ey = ps.solve.solve(P, beta_in)
-Ex = np.reshape(Ex, (points, points))    
-Ey = np.reshape(Ey, (points, points))
 
-print(beta * lam / (2.*cst.pi) )
+# Recover 2D field profiles from each vector solution
+Ex_fields = [np.reshape(E_vec, (points, points)) for E_vec in Ex] 
+Ey_fields = [np.reshape(E_vec, (points, points)) for E_vec in Ey] 
 
-plt.figure()
-plt.pcolor(x*1.E6, y*1.E6, np.real(Ex))
-plt.show()
+# For each eigenmode, create a real field plot for x-polarised light
+for i, E in enumerate(Ex_fields):
+   plt.figure()
+   
+   neff = beta[i]* lam / (2. * cst.pi) 
+
+   plt.pcolor(x*1.E6, y*1.E6, np.real(E))
+   
+   plt.title("Effective index: {}".format(neff))
+   plt.xlabel("x (microns)")
+   plt.ylabel("y (microns)")
+   
+   plt.show()
