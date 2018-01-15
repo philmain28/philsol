@@ -1,5 +1,5 @@
 # philsol
-## Modes for the Masses
+## Modes for the Masses (Massless?)
 Fed up with relying on expensive proprietary for your waveguide research?  philsol might just be the package for you. 
 This is a fully vectorial finite difference waveguide mode solver. In a world where high performance hardware is cheaper than high end software, philsol throws elegence and sophistication out of the window and replaces it with brute force. 
 
