@@ -29,7 +29,7 @@ def bmp_to_array(file):
 points = 200
 
 #lets import an sem image
-index_array = bmp_to_array('hollow_core3.bmp')
+index_array = bmp_to_array('image_example.bmp')
 
 # Check that the array has been correctly scaled
 assert np.max(index_array) <= 1.0
