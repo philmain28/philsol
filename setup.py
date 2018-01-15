@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "philsol",
-    version = "0.11",
+    version = "0.12",
     author = "Phil Main",
     author_email = "philmain28@gmail.com",
 	install_requires=['numpy', 'scipy'],
