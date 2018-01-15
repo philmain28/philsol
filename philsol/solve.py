@@ -3,7 +3,7 @@ import scipy.sparse.linalg as linalg
 import time
 import numpy as np
 
-def solve_Et(P, beta_trial, E_trial=None, neigs=1):
+def solve(P, beta_trial, E_trial=None, neigs=1):
     """
 	Solves eigenproblem and returns beta and the transverse E-feilds
 	"""

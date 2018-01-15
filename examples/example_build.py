@@ -44,7 +44,7 @@ plt.pcolor(x*1.E6,y*1.E6, n[:,:,1])
 P, _ = ps.eigen_build(k, n, dx, dy)
 
 #%% Now we solve
-beta, Ex, Ey = ps.solve.solve_Et(P, beta_in)
+beta, Ex, Ey = ps.solve.solve(P, beta_in)
 Ex = np.reshape(Ex, (points, points))    
 Ey = np.reshape(Ey, (points, points))
 
