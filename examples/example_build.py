@@ -51,15 +51,21 @@ Ex_fields = [np.reshape(E_vec, (points, points)) for E_vec in Ex]
 Ey_fields = [np.reshape(E_vec, (points, points)) for E_vec in Ey] 
 
 # For each eigenmode, create a real field plot for x-polarised light
-for i, E in enumerate(Ex_fields):
-   plt.figure()
-   
-   neff = beta[i]* lam / (2. * cst.pi) 
+for i, E in enumerate(Ey_fields):
+	plt.figure(figsize=(8, 4))
+	plt.suptitle("Effective index: {}".format(neff))
 
-   plt.pcolor(x*1.E6, y*1.E6, np.real(E))
-   
-   plt.title("Effective index: {}".format(neff))
-   plt.xlabel("x (microns)")
-   plt.ylabel("y (microns)")
-   
-   plt.show()
+	neff = beta[i]* lam / (2. * cst.pi) 
+
+	plt.subplot(121, aspect='equal')
+	plt.pcolor(x*1.E6, y*1.E6, np.real(Ex_fields[i]))
+	plt.title("E_x")
+	plt.xlabel("x (microns)")
+	plt.ylabel("y (microns)")
+
+	plt.subplot(122, aspect='equal')
+	plt.pcolor(x*1.E6, y*1.E6, np.real(E))
+	plt.title("E_y")
+	plt.xlabel("x (microns)")
+
+	plt.show()
