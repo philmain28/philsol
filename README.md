@@ -9,7 +9,7 @@ This is a direct Python implimentaion of the algorithm found in the paper:
 Warning: I haven't thoroughly tested so be wary and check the results are sensible...
 
 ## Installation
-- Clone or download, and run `python setup.py install`
+- Clone or download, and install with `sudo python setup.py install`
 
 ## Examples
 - Commented example projects can be found in the *examples* directory.
