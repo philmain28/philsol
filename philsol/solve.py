@@ -10,7 +10,7 @@ def solve(P, beta_trial, E_trial=None, neigs=1):
     print('Solving eigenmodes on CPU')
     t = time.time()
 
-    beta_squared, E = linalg.eigs(P, neigs, sigma=beta_trial ** 2)
+    beta_squared, E = linalg.eigs(P, neigs, sigma=beta_trial ** 2, v0 = E_trial)
 
     Ex, Ey = np.split(E, 2)
     
