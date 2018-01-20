@@ -24,7 +24,7 @@ Warning: I haven't thoroughly tested so be wary and check the results are sensib
 - Currently hard coded with conductive boundary.
 
 ### Geometry building
-- The quickest way of importing geometry is with a bitmap image (For a tutorial on geometry building https://www.youtube.com/watch?v=QjRi0Mq3G2g)
+- The quickest way of importing geometry is with a bitmap image (For a tutorial building a geometry with this method https://www.youtube.com/watch?v=QjRi0Mq3G2g)
 - See *examples/example_image.py* for an example in loading .bpm images
 - See *examples/example_build.py* for an example in building geometry using PIL/Pillow
 
