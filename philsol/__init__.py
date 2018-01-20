@@ -9,8 +9,7 @@ Zhaoming Zhu and Thomous G Brown
 
 """
 
-
-
+from philsol.core import eigen_build
 
 """
 Contains the main maths, lifted from the Zhu paper to assemble Maxwells equations into a linear eigenvalue problem:
@@ -18,16 +17,17 @@ Contains the main maths, lifted from the Zhu paper to assemble Maxwells equation
 - Returns scipy.sparse matrix which defines the eigen problem for a given refractive index profile. 
 - Other operator can be return to help construct other coupled fields (such as E_z, H_x, H_y, H_z)
 """
-from philsol.core import eigen_build
+
+from philsol import solve
 
 """
 - Handles the eigen solving bit 
 - Nothing too complicated here at the moment it just uses standard library scipy sparse libary.
 - We hope to add some more fancy eigen solving tricks at a later date (e.g SLEPc )
 """
-from philsol import solve
+
+from philsol import construct
 
 """
 - This function is empty. 
 """
-from philsol import construct
