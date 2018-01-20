@@ -7,6 +7,7 @@ fd mode solver based on:
 Full-vectorial finite-difference anaylysis of microstructured oprical fibres
 Zhaoming Zhu and Thomous G Brown
 
+Please break open the functions and figure out how they work.
 """
 
 from philsol.core import eigen_build
