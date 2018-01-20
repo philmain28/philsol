@@ -10,7 +10,7 @@ Warning: I haven't thoroughly tested so be wary and check the results are sensib
 
 ## Installation
 - Clone or download, and install with `sudo python setup.py install`
-- If you are new to python, the important bit is the function in core.py which can be run on its own if you prefer. 
+- If you are new to python, the important bit is the function in core.py which can be run by itself. 
 
 ## Examples
 - Commented example projects can be found in the *examples* directory.
