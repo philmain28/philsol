@@ -21,8 +21,8 @@ def solve(P, beta_trial, E_trial=None, neigs=1):
 
 def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
     """
-	Solves eigenproblem with fancier tools
-	"""
+    Solves eigenproblem with fancier tools
+    """
     from petsc4py import PETSc
     from slepc4py import SLEPc
     
@@ -34,34 +34,28 @@ def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
                                       csr=(P.indptr, P.indices,
                                            P.data))
     
-    #define a spectral transform
-    ''''
-    trans = SLEPc.ST(); trans.create(MPI_COMM_WORLD)
-    trans.setShift(beta_trial**2)
-    '''
-    
     
     # initalise solver object
     E = SLEPc.EPS(); E.create()
     
     # lets set the solver options
-    #E.setST(trans)
     E.setOperators(fancy_P)
     E.setProblemType(SLEPc.EPS.ProblemType.NHEP)
     E.setDimensions(nev = neigs)
     if E_trial != None:
         E.setInitialSpace(E_trial)
 
-    E.setTarget(beta_trial**2)
-    E.setWhichEigenpairs(7)
-    #E.setTarget(1.E20)
-    #now we set up the spectral transform
+    # now we set up the spectral region to look in 	
+    E.setTarget(beta_trial**2) 
+    E.setWhichEigenpairs(7) #look for closest in absoult value
+
     
     
     #beta_trial**2)
     print('Solving eigenmodes using fancy solver')
     E.solve()
     
+    #now we can start unpacking	
     nconv = E.getConverged()
     beta = []
     Ex = []
@@ -80,5 +74,5 @@ def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
      
     E.destroy()
     fancy_P.destroy()
-    #now we can start unpacking
-    return beta, Ex, Ey #beta_squared ** 0.5, Ex, Ey
+    
+    return beta, Ex, Ey 
