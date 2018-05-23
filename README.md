@@ -22,6 +22,7 @@ Warning: I haven't thoroughly tested so be wary and check the results are sensib
 - Return x and y componants of electric field.
 - philsol can handle anisotropic refractive indices with diagonal tensor.
 - Currently hard coded with conductive boundary.
+- Now includes choice of eigensolver
 
 ### Geometry building
 - The quickest way of importing geometry is with a bitmap image (For a tutorial building a geometry with this method https://www.youtube.com/watch?v=QjRi0Mq3G2g)
