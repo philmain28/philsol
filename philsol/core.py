@@ -2,13 +2,38 @@ import numpy as np
 import scipy.sparse as sps
 import time
 
-def eigen_build(k0, n, dx, dy):
-    # lets find out size of grid and construct some finite difference operators    
+def eigen_build(k0, n, dx, dy, x_boundary = None, y_boundary = None):
+    
+    
+    # lets find out size of grid and construct some finite difference operators  
+    # These can take different forms depending on the user inputed boundarys
+    # These operators also need boundaries
     nx, ny, dummy = np.shape(n)
     print('Assembling matrix for {} grid points...\n'.format(nx*ny))
     
-    Ux = (-sps.eye(nx*ny, k= 0) + sps.eye(nx*ny, k=1)) / dx  
-    Uy = (-sps.eye(nx*ny, k= 0) + sps.eye(nx*ny, k=nx)) / dy 
+
+    
+    # construct finite difference operators single row of FD grid 
+    Ux_temp = ( - np.eye(nx, k = 0) + np.eye(nx, k = 1) ) / dx
+    
+    Uy  = ( - sps.eye(nx*ny, k = 0) + sps.eye(nx*ny, k = nx) ) / dy
+  
+    if x_boundary == 'periodic':
+        Ux_temp[nx-1, 0] = 1. / dx
+        
+    if y_boundary == 'periodic':
+        # This boundary needs a bit more thought although my intuition says its 
+        # just a wrap around
+        Uy = Uy + sps.eye(nx*ny, k= -nx) / dy
+    
+    
+    #This statement is kind of confusing but is the equivilent to doing a tensor 
+    #contraction. So each row operation is apended to the diagonals of a larger 
+    #matrix so we can operate on the whole grid at once.  
+    Ux = sps.block_diag([Ux_temp for i in range(ny)], format = 'csr')
+    
+#%% Now we can construct all the other operators        
+ 
     Vx = - Ux.transpose()
     Vy = - Uy.transpose()
     I =  sps.eye(nx*ny)    
@@ -27,9 +52,9 @@ def eigen_build(k0, n, dx, dy):
             count = count + 1 
             
             
-    epsx =  sps.spdiags(epsx, 0, nx*ny,nx*ny)
-    epsy =  sps.spdiags(epsy,0, nx*ny,nx*ny)   
-    epszi = sps.spdiags(epszi,0, nx*ny,nx*ny)
+    epsx =  sps.spdiags(epsx, 0, nx*ny, nx*ny, format = 'csr')
+    epsy =  sps.spdiags(epsy,0, nx*ny, nx*ny, format = 'csr')   
+    epszi = sps.spdiags(epszi,0, nx*ny, nx*ny, format = 'csr')
     
 
     # Now we need to construct the full operator matrices
@@ -50,11 +75,8 @@ def eigen_build(k0, n, dx, dy):
           
     
     # Ok we should be able to do the final assembly now !!!
-    P = sps.vstack( 
-           [ sps.hstack([sps.coo_matrix(Pxx), sps.coo_matrix(Pxy)]) , 
-                     sps.hstack([sps.coo_matrix(Pyx), sps.coo_matrix(Pyy)])]
-                  ) 
+    P = sps.vstack( [ sps.hstack([Pxx, Pxy]) , sps.hstack([Pyx, Pyy])] ) 
 
     return P, {'epsx': epsx, 'epsy':epsy, 'epszi': epszi, 
-                   'ux': Ux, 'uy': Uy, 'vx': Vx, 'vy': Vy }
+                                       'ux': Ux, 'uy': Uy, 'vx': Vx, 'vy': Vy }
 
