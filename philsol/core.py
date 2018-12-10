@@ -68,7 +68,7 @@ def eigen_build(k0, n, dx, dy, x_boundary = None, y_boundary = None):
     Pxy = (  Ux * epszi * Vy * (epsy + Vx * Ux / k0**2)
               -  (k0**2 * I + Ux * epszi * Vx) * Vy * Ux / k0**2   )
           
-    Pyx = (  Uy * epszi * Vx * (epsy + Vy * Uy / k0**2 ) 
+    Pyx = (  Uy * epszi * Vx * (epsx + Vy * Uy / k0**2 ) 
              - (k0**2 * I + Uy * epszi * Vy) * Vx * Uy / k0**2 )  
     
     print('and we are done (after {} secs).'.format(time.time() - t))     
