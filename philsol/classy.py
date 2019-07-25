@@ -69,9 +69,9 @@ class phil_class:
         ez and h feilds
         '''
         
-        # some insults if everyprint(np.shape(neg_fibre.P))thing isn't set up
+        # some insults if everything isn't set up
         if self.P == None: 
-            print("Build you're eigenproblem you idiot")
+            print("Build your eigenproblem you idiot")
             
         
         self.Eigs = neigs
