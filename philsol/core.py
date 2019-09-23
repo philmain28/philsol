@@ -24,7 +24,7 @@ def eigen_build(k0, n, dx, dy, x_boundary = None, y_boundary = None):
     if y_boundary == 'periodic':
         # This boundary needs a bit more thought although my intuition says its 
         # just a wrap around
-        Uy = Uy + sps.eye(nx*ny, k= -nx) / dy
+        Uy = Uy + sps.eye(nx*ny, k= -(nx-1)*ny) / dy
     
     
     #This statement is kind of confusing but is the equivilent to doing a tensor 
