@@ -33,14 +33,8 @@ class phil_class:
                
         if dx == None and dy == None: 
             if x_max != None and y_max != None:
-               '''
-               self.dx = dx
-               self.dy = dy
-               self.x = np.array(range(self.num_x)) * self.dx
-               self.y = np.array(range(self.num_y)) * self.dy
-               '''
                self.dx = x_max / float(self.num_x - 1)
-               self.dy = y_max / float(self.num_x - 1)
+               self.dy = y_max / float(self.num_y - 1)
             else: 
                raise Exception('Gonna need some dimensions yo!')
 
