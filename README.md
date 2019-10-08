@@ -12,7 +12,7 @@ New Warning: Original paper by Zhu and Brown is in gaussian not S. I. units.
 This means that the constructed H fields must be corrected by a factor of $\mu_0 c$ for calculations in S.I units. 
 
 ## Installation
-- Clone or download, and install with `sudo python setup.py install`
+- Clone or download, and install with `sudo python setup.py install` (you may need to install python-setuptools)
 - If you are new to python, the important bit is the function in core.py which can be run by itself. 
 
 ## Examples
