@@ -35,6 +35,7 @@ This means that the constructed H fields must be corrected by a factor of $\mu_0
 - See *examples/example_build.py* for an example in building geometry using PIL/Pillow
 
 ## To do 
+- More intelligent geometry aproximation (e.g pixel interpolation on curved boundaries)
 - More boundry condition options Bloch, PML...
 - GPU eigensolving
 
