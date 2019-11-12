@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "philsol"
+version = "0.22"
+description = "A fully vectorial finite difference waveguide mode solver. Based on the algorithm of Zhu and Brown"
+
+license = "GNU GPL"
+
+authors = [
+    "Phil Main <philmain28@gmail.com>"
+]
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://github.com/philmain28/philsol"
+homepage = "https://github.com/philmain28/philsol"
+
+keywords = ['vector', 'finite difference', 'waveguide', 'mode solver']
+
+[tool.poetry.dependencies]
+python = "^3.5"
+numpy = "^1.17"
+scipy = "^1.3"
