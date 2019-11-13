@@ -1,15 +1,3 @@
-
-"""
-Created on Mon Oct  1 14:36:49 2018
-
-Sweet lets wrap up all our functions into a higher level class to save us the 
-effort of actualy explicitly passing everything around
-
-The n_build function will need to be manually changed
-
-
-@author: pbm24
-"""
 import philsol as ps
 import numpy as np
 
@@ -21,6 +9,7 @@ class phil_class:
         self.Eigs = 1
         self.E_trial = None
         self.P = None
+        self.mats = None
         
         if x_max == None and y_max == None: 
             if dx != None and dy != None:
@@ -33,13 +22,19 @@ class phil_class:
                
         if dx == None and dy == None: 
             if x_max != None and y_max != None:
+               '''
+               self.dx = dx
+               self.dy = dy
+               self.x = np.array(range(self.num_x)) * self.dx
+               self.y = np.array(range(self.num_y)) * self.dy
+               '''
                self.dx = x_max / float(self.num_x - 1)
-               self.dy = y_max / float(self.num_y - 1)
+               self.dy = y_max / float(self.num_x - 1)
             else: 
                raise Exception('Gonna need some dimensions yo!')
 
 
-    def build_stuff(self, x_bound = None, y_bound = None, matrices = None):
+    def build_stuff(self, x_bound = None, y_bound = None, kx_bloch = 0, ky_bloch = 0, matrices = None):
         
         
         if matrices == None:
@@ -48,14 +43,17 @@ class phil_class:
                                                 self.dx, 
                                                 self.dy, 
                                                 x_boundary = x_bound, 
-                                                y_boundary = y_bound      )
+                                                y_boundary = y_bound     
+                                                )
+
         else:
             self.P, self.mats  =  ps.core.eigen_build(    self.k0, 
                                                           self.n, 
                                                           self.dx, 
                                                           self.dy, 
                                                           x_boundary = x_bound, 
-                                                          y_boundary = y_bound)
+                                                          y_boundary = y_bound
+                                                          )
     
     def solve_stuff(self, neigs, beta_trial, extra_fields = None):
         '''
@@ -67,24 +65,39 @@ class phil_class:
         if self.P == None: 
             print("Build your eigenproblem you idiot")
             
+        if self.mats == None:
+            print('Remember to build with extra matrices')
+            
         
         self.Eigs = neigs
         self.beta, self.Ex, self.Ey = ps.solve.solve(   self.P, 
-                                                        beta_trial, 
-                                                        E_trial = self.E_trial, 
-                                                        neigs = self.Eigs    )
+                                                                          beta_trial, 
+                                                                          E_trial = self.E_trial, 
+                                                                          neigs = self.Eigs    )
 
         if extra_fields == True:
-            self.E = np.empty(self.neigs, 2 * self.num_x * self.num_y, 3)
-            self.H = np.empty_like(self.E)
-            for i in self.neigs:
+
+            self.E = np.empty((self.Eigs, self.num_x * self.num_y, 3), dtype = complex)
+            self.H = np.empty_like(self.E , dtype = complex )
+
+            for i in range(self.Eigs):
                 self.E[i, :, 0] = self.Ex[i,:]
                 self.E[i, :, 1] = self.Ey[i,:]
-                ez, hx, hy, hz = ps.construct()
+                ez, hx, hy, hz = ps.construct.extra_feilds(self.k0, self.beta[i], self.Ex[i,:], self.Ey[i,:], self.mats)
                 self.E[i, :, 2] = ez
                 self.H[i, :, 0] = hx
                 self.H[i, :, 1] = hy        
-                self.H[i, :, 2] = hz        
-
+                self.H[i, :, 2] = hz  
+                
+    
+    def destroy_crap(self, fields = False):
         
+        self.n = None
+        self.P = None
+        self.mats = None
+        if fields == True: 
+            self.Ex = None 
+            self.Ey = None
+            self.E = None
+            self.H = None
         
