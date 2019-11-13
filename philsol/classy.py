@@ -71,9 +71,10 @@ class phil_class:
         
         self.Eigs = neigs
         self.beta, self.Ex, self.Ey = ps.solve.solve(   self.P, 
-                                                                          beta_trial, 
-                                                                          E_trial = self.E_trial, 
-                                                                          neigs = self.Eigs    )
+                                                        beta_trial, 
+                                                        E_trial = self.E_trial, 
+                                                        neigs = self.Eigs    
+                                                        )
 
         if extra_fields == True:
 
