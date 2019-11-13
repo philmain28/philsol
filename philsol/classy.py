@@ -96,9 +96,10 @@ class phil_class:
         self.n = None
         self.P = None
         self.mats = None
+        self.Ex = None 
+        self.Ey = None
+        
         if fields == True: 
-            self.Ex = None 
-            self.Ey = None
             self.E = None
             self.H = None
         
