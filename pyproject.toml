@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "philsol"
-version = "0.23"
+version = "0.24"
 description = "A fully vectorial finite difference waveguide mode solver. Based on the algorithm of Zhu and Brown"
 
 license = "GNU GPL"
