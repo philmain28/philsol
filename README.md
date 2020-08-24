@@ -13,7 +13,7 @@ This means that the constructed H fields must be corrected by a factor of $\mu_0
 
 ## Installation
 - Intall using pip with command 'pip install philsol'
-- If you can be bothered, the important part is the function eigenbuild in core.py. 
+- If you can't be bothered, the important part is the function eigenbuild in core.py. 
 
 ## Examples
 - Commented example projects can be found in the *examples* directory.
