@@ -36,13 +36,13 @@ def eigen_build(k0, n, dx, dy, x_boundary = None, y_boundary = None):
  
     Vx = - Ux.transpose()
     Vy = - Uy.transpose()
-    I =  sps.eye(nx*ny)    
+    I =  sps.eye(nx*ny)
 
-    
+
     # We then build relative permitivity tensors  
-    epsx = np.empty(nx*ny)
-    epsy = np.empty(nx*ny)    
-    epszi = np.empty(nx*ny) 
+    epsx = np.empty(nx*ny, dtype=n.dtype)
+    epsy = np.empty(nx*ny, dtype=n.dtype)
+    epszi = np.empty(nx*ny, dtype=n.dtype)
     count = 0 
     for j in range(0,ny):
         for i in range(0, nx):            
