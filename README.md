@@ -12,7 +12,7 @@ New Warning: Original paper by Zhu and Brown is in gaussian not S. I. units.
 To correct use conversion table [here](https://en.wikipedia.org/wiki/Gaussian_units).
 
 ## Installation
-- Intall using pip with command 'pip install philsol'
+- Install using pip with command 'pip install philsol'
 - If you can't be bothered, the important part is the function eigenbuild in core.py. 
 
 ## Examples
