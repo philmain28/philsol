@@ -3,7 +3,7 @@
 Fed up with relying on expensive proprietary software for your electromagnetic waveguide research?  philsol might just be the package for you. 
 This is a fully vectorial finite difference waveguide mode solver. In a world where high performance hardware is cheaper than specialist software (including certain commercial packages which may or may not rhyme with my code), philsol throws elegence and sophistication out of the window and replaces it with brute force. 
 
-This is a direct Python implimentaion of the algorithm found in the paper: 
+This is a direct Python implimentation of the algorithm found in the paper: 
 ['Full-vectorial finite-difference analysis of microstructured optical fibres', by Zhu and Brown.](https://doi.org/10.1364/OE.10.000853)
 
 Warning: I haven't thoroughly tested so be wary and check the results are sensible...
