@@ -9,7 +9,7 @@ This is a direct Python implimentaion of the algorithm found in the paper:
 Warning: I haven't thoroughly tested so be wary and check the results are sensible...
 
 New Warning: Original paper by Zhu and Brown is in gaussian not S. I. units. 
-This means that the constructed H fields must be corrected by a factor of $\mu_0 c$ for calculations in S.I units. 
+To correct use conversion table [here](https://en.wikipedia.org/wiki/Gaussian_units).
 
 ## Installation
 - Intall using pip with command 'pip install philsol'
