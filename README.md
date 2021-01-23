@@ -25,7 +25,7 @@ To correct use conversion table [here](https://en.wikipedia.org/wiki/Gaussian_un
 - Return x and y componants of electric field.
 - philsol can handle anisotropic refractive indices with diagonal tensor.
 - Currently hard coded with conductive boundary.
-- Now includes choice of eigensolver: the default scipy.sparse solver based on ARPACK and Petsc (but you will need a working install of slepc4py and petsc4py)
+- Choice of solving routines: the default scipy.sparse solver or Slepc (slepc4py and petsc4py) this libraries can be fiddly to set up but are very heavily featured including some limited GPU support.  
 - Extra field componants Ez, Hx, Hy, Hz can be calculated from construct module
 - Periodic boundary conditions 
 
