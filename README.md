@@ -23,19 +23,17 @@ To correct use conversion table [here](https://en.wikipedia.org/wiki/Gaussian_un
 - Solves vector Maxwell(Helmholtz) equations in 2D for arbitary refractive index profile.
 - Return x and y componants of electric field.
 - philsol can handle anisotropic refractive indices with diagonal tensor.
-- Currently hard coded with conductive boundary.
 - Choice of solving routines: the default scipy.sparse solver or Slepc (slepc4py and petsc4py) this libraries can be fiddly to set up but are very heavily featured including some limited GPU support.  
 - Extra field componants Ez, Hx, Hy, Hz can be calculated from construct module
-- Periodic boundary conditions 
+- Perfect electric conductor, periodic and absorbing boundary conditions. 
 
 ### Geometry building
 - The quickest way of importing geometry is with a bitmap image 
-- See *examples/example_image.py* for an example in loading .bpm images
+- See *examples/example_image.py* and *examples/Hollow_Core_Fibre.ipynb* for examples loading .bpm images
 - See *examples/example_build.py* for an example in building geometry using PIL/Pillow
+- See *examples/Boundary Interpolation Example.ipynb* for an attempt to handle curved boundaries with pillows anti-aliasing capabilities 
 
-## To do 
-- More intelligent geometry aproximation (e.g pixel interpolation on curved boundaries)
-- More boundry condition options Bloch, PML...
-- GPU eigensolving
+## Final Note 
+I wrote this code a while ago for my PhD but sometimes I get nostalgic about photonics so if you are doing anything cool with philsol I would love to know about it. 
 
 
