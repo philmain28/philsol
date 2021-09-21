@@ -34,6 +34,6 @@ To correct use conversion table [here](https://en.wikipedia.org/wiki/Gaussian_un
 - See *examples/Boundary Interpolation Example.ipynb* for an attempt to handle curved boundaries with pillows anti-aliasing capabilities 
 
 ## Final Note 
-I wrote this code a while ago for my PhD but sometimes I get nostalgic about photonics so if you are doing anything cool with philsol I would love to know about it. 
+I wrote this code a while ago for my [PhD](https://purehost.bath.ac.uk/ws/portalfiles/portal/200802035/philip_main_thesis.pdf) but sometimes I get nostalgic about photonics so if you are doing anything cool with philsol I would love to know about it. 
 
 
