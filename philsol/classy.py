@@ -55,7 +55,7 @@ class phil_class:
                                                           y_boundary = y_bound
                                                           )
     
-    def solve_stuff(self, neigs, beta_trial, extra_fields = None):
+    def solve_stuff(self, neigs, beta_trial, extra_fields = False, poynting_vector = False):
         '''
         Function to pass object to solver with the option of constructing the 
         ez and h feilds
@@ -63,12 +63,12 @@ class phil_class:
         
         # some insults if everything isn't set up
         if self.P == None: 
-            print("Build your eigenproblem you idiot")
+            raise Exception("Build your eigenproblem you idiot")
             
-        if self.mats == None:
-            print('Remember to build with extra matrices')
-            
+        if self.mats == None and extra_fields == True:
+            raise Exception("If full vector fields are required the build_stuff step needs matrices = True")
         
+
         self.Eigs = neigs
         self.beta, self.Ex, self.Ey = ps.solve.solve(   self.P, 
                                                         beta_trial, 
@@ -89,7 +89,19 @@ class phil_class:
                 self.H[i, :, 0] = hx
                 self.H[i, :, 1] = hy        
                 self.H[i, :, 2] = hz  
+        
+        if poynting_vector == True:
+            if not extra_fields:
+                raise Exception("Poynting vector requires full E and H fields")
+        
+            self.S = np.empty((self.Eigs, self.num_x * self.num_y, 3), dtype = complex)
+            
+            # Calculate Poynting vector components: S = E × H*
+            self.S[:, :, 0] = self.E[:, :, 1] * np.conj(self.H[:, :, 2]) - self.E[:, :, 2] * np.conj(self.H[:, :, 1])
+            self.S[:, :, 1] = self.E[:, :, 2] * np.conj(self.H[:, :, 0]) - self.E[:, :, 0] * np.conj(self.H[:, :, 2])
+            self.S[:, :, 2] = self.E[:, :, 0] * np.conj(self.H[:, :, 1]) - self.E[:, :, 1] * np.conj(self.H[:, :, 0])
                 
+
     
     def destroy_crap(self, fields = False):
         
