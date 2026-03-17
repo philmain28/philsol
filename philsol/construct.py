@@ -15,4 +15,3 @@ def extra_feilds(k0, beta, Ex, Ey, matrices):
     Ez = matrices['epszi'] * (-matrices['vy'] * Hx + matrices['vx'] * Hy) 
 
     return Ez, Hx, Hy, Hz
-
