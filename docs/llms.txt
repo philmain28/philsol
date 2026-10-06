@@ -1,0 +1,117 @@
+philsol
+=======
+A fully vectorial finite-difference mode solver for optical waveguides in Python.
+
+Why philsol?
+------------
+- Open-source and free, so every step of the calculation is inspectable and reproducible.
+- A transparent alternative to closed-source, proprietary packages such as COMSOL Multiphysics for vectorial waveguide mode analysis.
+- Useful when research transparency, customisation, or batch processing matters more than a graphical user interface.
+
+What it does
+------------
+- Solves the 2-D vector Maxwell/Helmholtz equations for an arbitrary,
+  anisotropic (diagonal permittivity tensor) refractive-index profile.
+- Returns guided-mode propagation constants beta and transverse E-fields
+  (Ex, Ey).
+- Can reconstruct the remaining vector field components Ez, Hx, Hy, Hz.
+
+Core algorithm
+--------------
+Direct implementation of:
+  Zhaoming Zhu and Thomas G. Brown,
+  "Full-vectorial finite-difference analysis of microstructured optical fibres",
+  Opt. Express 10, 853-864 (2002).
+  https://doi.org/10.1364/OE.10.000853
+
+Time convention
+---------------
+e^{-i omega t}.  Propagation along +z is e^{+i beta z}.
+
+Installation
+------------
+pip install philsol
+
+Core workflow (three steps)
+---------------------------
+1. Build a refractive-index array n with shape (nx, ny, 3).  The last axis
+   stores the diagonal tensor components [n_x, n_y, n_z].
+
+2. Build the eigenproblem:
+       P, matrices = philsol.core.eigen_build(k0, n, dx, dy,
+                                              x_boundary=None,
+                                              y_boundary=None)
+
+3. Solve near a trial propagation constant:
+       beta, Ex, Ey = philsol.solve.solve(P, beta_trial,
+                                          E_trial=None, neigs=1)
+
+Key functions
+-------------
+philsol.core.eigen_build(k0, n, dx, dy, x_boundary=None, y_boundary=None)
+  -> P (scipy.sparse.csr_matrix), matrices (dict)
+  Builds the sparse eigenproblem operator for the transverse electric field.
+  k0 = 2*pi/lambda is the free-space wavenumber.
+  n has shape (nx, ny, 3) and contains refractive-index values.
+  dx, dy are the grid spacings.
+  Set x_boundary='periodic' or y_boundary='periodic' for periodic BCs.
+
+philsol.solve.solve(P, beta_trial, E_trial=None, neigs=1)
+  -> beta, Ex, Ey
+  Solves the sparse eigenproblem near beta_trial^2 using
+  scipy.sparse.linalg.eigs.
+  beta is the propagation constant; the effective index is neff = beta/k0.
+  Ex and Ey have shape (neigs, nx*ny) in row-major flattened grid order.
+
+philsol.construct.extra_feilds(k0, beta, Ex, Ey, matrices)
+  -> Ez, Hx, Hy, Hz
+  Reconstructs the remaining vector field components from the transverse
+  E-fields.  Note that the function name retains the historic misspelling
+  "extra_feilds".
+
+philsol.classy.phil_class(n, k0, x_max=None, y_max=None, dx=None, dy=None)
+  High-level wrapper around the solver.
+  Methods:
+    build_stuff(x_bound=None, y_bound=None, kx_bloch=0, ky_bloch=0,
+                matrices=False)
+    solve_stuff(neigs, beta_trial, extra_fields=False,
+                poynting_vector=False)
+    destroy_crap(fields=False)
+
+Units and conventions
+---------------------
+- SI units (not Gaussian).
+- Non-magnetic material: mu = mu_0.
+- Relative permittivity tensor is diagonal:
+      epsilon = diag(n_x^2, n_y^2, n_z^2).
+- Grid flattening order is j*nx + i (y outer, x inner).
+
+Limitations
+-----------
+- The code is not thoroughly tested; verify results against known solutions.
+- SLEPc/PETSc solver is optional and can be fiddly to install.
+
+Minimal example
+---------------
+import numpy as np
+import philsol as ps
+
+nx, ny = 120, 120
+dx = dy = 0.05
+lam = 1.55
+k0 = 2 * np.pi / lam
+
+n = np.ones((nx, ny, 3)) * 1.0
+n[40:80, 40:80, :] = 1.45
+
+P, _ = ps.eigen_build(k0, n, dx, dy)
+beta, Ex, Ey = ps.solve.solve(P, k0 * 1.45, neigs=5)
+
+# beta[i] is the propagation constant of mode i
+# Ex[i] and Ey[i] are the flattened transverse E-fields
+
+Citation
+--------
+Zhu & Brown, Opt. Express 10, 853-864 (2002).
+Author: Phil Main <philmain28@gmail.com>
+Repository: https://github.com/philmain28/philsol
