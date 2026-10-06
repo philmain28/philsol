@@ -1,12 +1,25 @@
-import scipy.constants as cst
 import scipy.sparse.linalg as linalg
 import time
 import numpy as np
+from typing import Tuple, List, Optional, Union
+import scipy.sparse as sparse
 
-def solve(P, beta_trial, E_trial=None, neigs=1):
+def solve(P: sparse.spmatrix, beta_trial: float, E_trial: Optional[np.ndarray] = None, neigs: int = 1) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-	Solves eigenproblem and returns beta and the transverse E-feilds
-	"""
+    Solves eigenproblem and returns beta and the transverse E-fields
+    
+    Args:
+        P: Sparse matrix for the eigenvalue problem
+        beta_trial: Initial guess for eigenvalue
+        E_trial: Initial guess for eigenvector (optional)
+        neigs: Number of eigenvalues/vectors to compute
+        
+    Returns:
+        Tuple containing:
+            - Propagation constants (square root of eigenvalues)
+            - Ex field components
+            - Ey field components
+    """
     print('Solving eigenmodes on CPU')
     t = time.time()
 
@@ -19,9 +32,22 @@ def solve(P, beta_trial, E_trial=None, neigs=1):
 
     return beta_squared ** 0.5, Ex, Ey
 
-def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
+def solve_fancy(P: sparse.spmatrix, beta_trial: float, E_trial: Optional[np.ndarray] = None, neigs: int = 1) -> Tuple[List[complex], List[np.ndarray], List[np.ndarray]]:
     """
-    Solves eigenproblem with fancier tools
+    Solves eigenproblem with PETSc and SLEPc solvers, in theory these should
+    give better performance but require a bit more set up. 
+    
+    Args:
+        P: Sparse matrix for the eigenvalue problem
+        beta_trial: Initial guess for eigenvalue
+        E_trial: Initial guess for eigenvector (optional)
+        neigs: Number of eigenvalues/vectors to compute
+        
+    Returns:
+        Tuple containing:
+            - List of propagation constants (square root of eigenvalues)
+            - List of Ex field components
+            - List of Ey field components
     """
     from petsc4py import PETSc
     from slepc4py import SLEPc
@@ -47,11 +73,7 @@ def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
 
     # now we set up the spectral region to look in 	
     E.setTarget(beta_trial**2) 
-    E.setWhichEigenpairs(7) #look for closest in absoult value
-
-    
-    
-    #beta_trial**2)
+    E.setWhichEigenpairs(7) #look for closest in absolute value
     print('Solving eigenmodes using fancy solver')
     E.solve()
     
@@ -60,8 +82,8 @@ def solve_fancy(P, beta_trial, E_trial=None, neigs=1):
     beta = []
     Ex = []
     Ey = []
-    vr, wr = fancy_P.getVecs()
-    vi, wi = fancy_P.getVecs()
+    vr, _ = fancy_P.getVecs()
+    vi, _ = fancy_P.getVecs()
     for i in range(nconv):
         beta.append(E.getEigenpair(i, vr, vi)**0.5)
         #beta.append(E.getEigenvalue(i)**0.5)
