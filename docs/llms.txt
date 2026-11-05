@@ -6,7 +6,8 @@ Why philsol?
 ------------
 - Open-source and free, so every step of the calculation is inspectable and reproducible.
 - A transparent alternative to closed-source, proprietary packages such as COMSOL Multiphysics for vectorial waveguide mode analysis.
-- Useful when research transparency, customisation, or batch processing matters more than a graphical user interface.
+- Allows easy batch processing, rapid geometry generation and access to any of the many powerful python tools.
+- Allows easy access to underlying matrices which allows easy use of other higher performance eigensolvers if required
 
 What it does
 ------------
@@ -15,6 +16,8 @@ What it does
 - Returns guided-mode propagation constants beta and transverse E-fields
   (Ex, Ey).
 - Can reconstruct the remaining vector field components Ez, Hx, Hy, Hz.
+- Some support for periodic boundary conditions
+- Some support for lossy meadia and with some creativity confinement losses
 
 Core algorithm
 --------------
@@ -80,7 +83,7 @@ philsol.classy.phil_class(n, k0, x_max=None, y_max=None, dx=None, dy=None)
 
 Units and conventions
 ---------------------
-- SI units (not Gaussian).
+- Gaussian units.
 - Non-magnetic material: mu = mu_0.
 - Relative permittivity tensor is diagonal:
       epsilon = diag(n_x^2, n_y^2, n_z^2).
@@ -89,7 +92,6 @@ Units and conventions
 Limitations
 -----------
 - The code is not thoroughly tested; verify results against known solutions.
-- SLEPc/PETSc solver is optional and can be fiddly to install.
 
 Minimal example
 ---------------

@@ -2,7 +2,7 @@
 
 Assumptions:
 
-- Time-harmonic fields with $e^{-i\omega t}$.
+- Time-harmonic fields with $e^{-i\omega t}$. This is a relatively week assumption and time dependence can be added with a forier transform.
 - Non-magnetic material, $\mu = \mu_0$.
 - Relative permittivity tensor $\boldsymbol{\varepsilon}(x,y) = \operatorname{diag}\bigl(\varepsilon_x(x,y),\,\varepsilon_y(x,y),\,\varepsilon_z(x,y)\bigr)$, with $\varepsilon_i = n_i^2$.
 
@@ -55,8 +55,7 @@ $$
 
 ## Modal inner product and projection (Poynting normalisation)
 
-A convenient orthogonality relation for lossless, reciprocal waveguides uses the longitudinal component of the time-averaged Poynting vector. With transverse fields $\mathbf{e}_m = (e_{m,x},e_{m,y},0)$ and $\mathbf{h}_m = (h_{m,x},h_{m,y},0)$,
-
+When setting boundary conditions along the wave direction of travel the poynting vector provides a convenient orthogonality condition. THis is given by the following expression:
 $$
 \langle m \mid n \rangle
 = \frac{1}{2}\int_A \bigl[\mathbf{e}_m \times \mathbf{h}_n^*\bigr]\cdot\hat{\mathbf{z}}\,dA
@@ -77,8 +76,6 @@ c_m = \frac{\langle m \mid \psi\rangle}{\langle m \mid m\rangle}
 {\displaystyle\frac{1}{2}\int_A \bigl[\mathbf{e}_m\times\mathbf{h}_m^*\bigr]\cdot\hat{\mathbf{z}}\,dA}.
 $$
 
-If only the electric field $\mathbf{E}_0$ is known, philsol also constructs the corresponding magnetic mode $\mathbf{h}_m$, so the same formula can be used.
-
 ### Self-adjointness and the grid dot product
 
 The finite-difference operator built by philsol is self-adjoint under the Poynting-flux inner product, so its eigenvectors are orthogonal with respect to that inner product. On the discrete grid the Poynting integral reduces to a weighted sum over the sampled eigenvector components:
@@ -87,21 +84,8 @@ $$
 \langle m \mid \psi \rangle \approx \Delta x\,\Delta y \sum_{ij} \mathbf{E}_{m,ij}^* \cdot \boldsymbol{\psi}_{ij}.
 $$
 
-This is exactly what is being done in **Cell 7** of `examples/Basic Waveguide Physics.ipynb` (`np.sum(emoji_flat * Ex[i,:].conjugate()) * Ex[i,:]`) to project the input image onto mode $i$.
-
-## Useful extra relations
-
 - Time-averaged Poynting vector:
   $$
   \langle \mathbf{S} \rangle = \frac{1}{2}\operatorname{Re}\bigl[\mathbf{E}\times\mathbf{H}^*\bigr].
   $$
 
-- Out-of-plane magnetic field from Faraday's law:
-  $$
-  H_z = \frac{i}{k_0}\left(\frac{\partial E_y}{\partial x} - \frac{\partial E_x}{\partial y}\right).
-  $$
-
-- Beat length between two modes:
-  $$
-  L_{\pi} = \frac{\pi}{|\beta_m - \beta_n|}.
-  $$

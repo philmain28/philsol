@@ -5,7 +5,7 @@ Fed up with relying on expensive proprietary software for your electromagnetic w
 This is a fully vectorial finite-difference waveguide mode solver and a direct Python implementation of the algorithm found in the paper:
 ['Full-vectorial finite-difference analysis of microstructured optical fibres', by Zhu and Brown.](https://doi.org/10.1364/OE.10.000853)
 
-Warning: I haven't thoroughly tested so be wary and check the results are sensible...
+Warning: It seems to do a sprisingly good job but I never got round to doing much testing. 
 
 New Warning: The original paper by Zhu and Brown is in Gaussian rather than SI units.
 To correct this, use the conversion table [here](https://en.wikipedia.org/wiki/Gaussian_units).
