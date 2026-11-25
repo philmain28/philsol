@@ -1,7 +1,7 @@
 import scipy.sparse.linalg as linalg
 import time
 import numpy as np
-from typing import Tuple, List, Optional, Union
+from typing import Tuple, List, Optional
 import scipy.sparse as sparse
 
 def solve(P: sparse.spmatrix, beta_trial: float, E_trial: Optional[np.ndarray] = None, neigs: int = 1) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -53,8 +53,6 @@ def solve_fancy(P: sparse.spmatrix, beta_trial: float, E_trial: Optional[np.ndar
     from slepc4py import SLEPc
     
 
-    t = time.time()
-    
     # convert eigenproblem into a form that petsc can understand
     fancy_P = PETSc.Mat().createAIJ(size=P.shape,
                                       csr=(P.indptr, P.indices,
@@ -62,13 +60,14 @@ def solve_fancy(P: sparse.spmatrix, beta_trial: float, E_trial: Optional[np.ndar
     
     
     # initalise solver object
-    E = SLEPc.EPS(); E.create()
+    E = SLEPc.EPS()
+    E.create()
     
     # lets set the solver options
     E.setOperators(fancy_P)
     E.setProblemType(SLEPc.EPS.ProblemType.NHEP)
     E.setDimensions(nev = neigs)
-    if E_trial != None:
+    if E_trial is not None:
         E.setInitialSpace(E_trial)
 
     # now we set up the spectral region to look in 	

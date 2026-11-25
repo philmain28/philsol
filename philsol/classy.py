@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union, List
+from typing import Optional
 import philsol as ps
 import numpy as np
 
@@ -27,8 +27,8 @@ class phil_class:
         self.P = None
         self.mats = None
         
-        if x_max == None and y_max == None: 
-            if dx != None and dy != None:
+        if x_max is None and y_max is None: 
+            if dx is not None and dy is not None:
                self.dx = dx
                self.dy = dy
                self.x = np.array(range(self.num_x)) * self.dx
@@ -36,8 +36,8 @@ class phil_class:
             else: 
                raise Exception('Gonna need some dimensions yo!')
                
-        if dx == None and dy == None: 
-            if x_max != None and y_max != None:
+        if dx is None and dy is None: 
+            if x_max is not None and y_max is not None:
                '''
                self.dx = dx
                self.dy = dy
@@ -65,7 +65,7 @@ class phil_class:
         """
         
         
-        if matrices == None:
+        if matrices is None:
             self.P, _ = ps.core.eigen_build(    self.k0, 
                                                 self.n, 
                                                 self.dx, 
@@ -101,10 +101,10 @@ class phil_class:
         """
         
         # some insults if everything isn't set up
-        if self.P == None: 
+        if self.P is None: 
             raise Exception("Build your eigenproblem you idiot")
             
-        if self.mats == None and extra_fields == True:
+        if self.mats is None and extra_fields:
             raise Exception("If full vector fields are required the build_stuff step needs matrices = True")
         
 
@@ -115,7 +115,7 @@ class phil_class:
                                                         neigs = self.Eigs    
                                                         )
 
-        if extra_fields == True:
+        if extra_fields:
 
             self.E = np.empty((self.Eigs, self.num_x * self.num_y, 3), dtype = complex)
             self.H = np.empty_like(self.E , dtype = complex )
@@ -129,7 +129,7 @@ class phil_class:
                 self.H[i, :, 1] = hy        
                 self.H[i, :, 2] = hz  
         
-        if poynting_vector == True:
+        if poynting_vector:
             if not extra_fields:
                 raise Exception("Poynting vector requires full E and H fields")
         
@@ -155,7 +155,7 @@ class phil_class:
         self.Ex = None 
         self.Ey = None
         
-        if fields == True: 
+        if fields: 
             self.E = None
             self.H = None
         

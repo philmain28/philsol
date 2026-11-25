@@ -20,3 +20,12 @@ keywords = ['vector', 'finite difference', 'waveguide', 'mode solver']
 python = "^3.11"
 numpy = "^1.24"
 scipy = "^1.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff.lint]
+# Pin the rule set so new ruff releases cannot silently add rules; the
+# legacy code is not ready for the full default set (UP, PL, ...).
+select = ["E4", "E7", "E9", "F"]
