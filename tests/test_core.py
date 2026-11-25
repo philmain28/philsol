@@ -2,7 +2,8 @@
 
 These pin down the grid ordering index = i + j*nx, the forward-difference
 stencils and the periodic wrap diagonals without needing an eigen-solve,
-plus one exact anisotropic mode check.
+plus an exact anisotropic mode check and a convergence test against an
+analytical solution.
 """
 
 import numpy as np
@@ -133,3 +134,43 @@ def test_uniform_anisotropic_principal_modes() -> None:
     n_eff: np.ndarray = np.abs(beta / k0)
     assert np.min(np.abs(n_eff - n_x)) < 1e-5
     assert np.min(np.abs(n_eff - n_y)) < 1e-5
+
+
+def test_parabolic_profile_convergence() -> None:
+    """Convergence of beta against an exact analytical solution.
+
+    A parabolic permittivity eps(y) = eps0 - c*y^2, invariant along x, turns
+    the Ex-polarized mode equation into the quantum harmonic oscillator
+    -Ex'' + (k0**2*c)*y^2*Ex = (k0**2*eps0 - beta**2)*Ex, whose fundamental
+    eigenvalue is exactly sqrt(k0**2*c) = k0*sqrt(c). Because the profile is
+    x-invariant and periodic in x, the discrete operator reproduces this
+    scalar problem exactly, so beta must converge to the analytical value at
+    second order in the grid spacing.
+    """
+    k0: float = 2 * np.pi / 1.55
+    eps0: float = 9.0
+    alpha: float = 9.0  # oscillator strength (um^-2)
+    c: float = alpha / k0**2
+    beta_exact: float = np.sqrt(k0**2 * eps0 - np.sqrt(alpha))
+
+    errors: list[float] = []
+    for ny in (40, 80, 160):
+        dy: float = 8.0 / ny
+        y: np.ndarray = -4.0 + dy * np.arange(ny)
+        profile: np.ndarray = np.sqrt(eps0 - c * y**2)
+        n: np.ndarray = np.empty((4, ny, 3))
+        n[:, :, 0] = profile
+        n[:, :, 1] = profile
+        n[:, :, 2] = profile
+        P, _ = eigen_build(k0, n, dy, dy, x_boundary="periodic", y_boundary="periodic")
+        beta, _, _ = solve(P, beta_trial=beta_exact, neigs=2)
+        # The analytical mode must appear in the spectrum; measure how close
+        # the nearest computed mode gets (the Ey-polarized twin satisfies a
+        # slightly different discrete equation, so take the minimum).
+        err: float = float(np.min(np.abs(np.abs(beta) - beta_exact)) / beta_exact)
+        errors.append(err)
+
+    # Second order: refining dy by 4x must shrink the error by ~16x.
+    order: float = float(np.log2(errors[0] / errors[2]) / 2.0)
+    assert 1.5 < order < 2.5
+    assert errors[2] < 1e-4
