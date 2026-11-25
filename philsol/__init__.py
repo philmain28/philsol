@@ -11,6 +11,10 @@ Please break open the functions and figure out how they work.
 """
 
 from philsol.core import eigen_build
+from philsol import solve
+from philsol import construct
+
+__all__ = ["eigen_build", "solve", "construct"]
 
 """
 Contains the main maths, lifted from the Zhu paper to assemble Maxwells equations into a linear eigenvalue problem:
@@ -19,15 +23,11 @@ Contains the main maths, lifted from the Zhu paper to assemble Maxwells equation
 - Other operator can be return to help construct other coupled fields (such as E_z, H_x, H_y, H_z)
 """
 
-from philsol import solve
-
 """
 - Handles the eigen solving bit 
 - Nothing too complicated here at the moment it just uses standard library scipy sparse libary.
 - We hope to add some more fancy eigen solving tricks at a later date (e.g SLEPc )
 """
-
-from philsol import construct
 
 """
 - This function is empty. 

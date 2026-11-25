@@ -42,9 +42,9 @@ def eigen_build(k0: float, n: np.ndarray, dx: float, dy: float,
     if x_boundary == 'periodic':
         Ux_temp[nx-1, 0] = 1. / dx
         
-    # Wrap around periodic boundary. Something something bloch functions.
+    # Wrap around periodic boundary. With index = i + j*nx ordering the row
     if y_boundary == 'periodic':
-        Uy = Uy + sps.eye(nx*ny, k= -(nx-1)*ny) / dy
+        Uy = Uy + sps.eye(nx*ny, k= -(ny-1)*nx) / dy
     
     
     #This statement is kind of confusing but is the equivalent to doing a tensor 
@@ -55,7 +55,7 @@ def eigen_build(k0: float, n: np.ndarray, dx: float, dy: float,
     # Construct other differential operators 
     Vx = - Ux.transpose()
     Vy = - Uy.transpose()
-    I =  sps.eye(nx*ny)
+    identity = sps.eye(nx*ny)
 
 
     # We then build relative permitivity tensors  
@@ -79,16 +79,16 @@ def eigen_build(k0: float, n: np.ndarray, dx: float, dy: float,
     # Now we need to construct the full operator matrices
     t = time.time()     
     Pxx = (- Ux * epszi * Vy * Vx * Uy / k0**2 
-             + (k0**2 * I + Ux * epszi * Vx) * (epsx + Vy * Uy / k0**2)    )                   
+             + (k0**2 * identity + Ux * epszi * Vx) * (epsx + Vy * Uy / k0**2)    )                   
     
     Pyy = (- Uy * epszi * Vx * Vy * Ux / k0**2 
-             + (k0**2 * I + Uy * epszi * Vy) * (epsy + Vx * Ux / k0**2)    )
+             + (k0**2 * identity + Uy * epszi * Vy) * (epsy + Vx * Ux / k0**2)    )
              
     Pxy = (  Ux * epszi * Vy * (epsy + Vx * Ux / k0**2)
-              -  (k0**2 * I + Ux * epszi * Vx) * Vy * Ux / k0**2   )
+              -  (k0**2 * identity + Ux * epszi * Vx) * Vy * Ux / k0**2   )
           
     Pyx = (  Uy * epszi * Vx * (epsx + Vy * Uy / k0**2 ) 
-             - (k0**2 * I + Uy * epszi * Vy) * Vx * Uy / k0**2 )  
+             - (k0**2 * identity + Uy * epszi * Vy) * Vx * Uy / k0**2 )  
     
     print('and we are done (after {} secs).'.format(time.time() - t))     
           
